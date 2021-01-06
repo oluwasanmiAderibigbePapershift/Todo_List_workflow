@@ -1,5 +1,6 @@
 package com.example.todolistworkflow
 
+import android.util.Log
 import com.example.todolistworkflow.data.TodoListWorker
 import com.example.todolistworkflow.data.TodosItem
 import com.squareup.workflow1.Snapshot
@@ -18,6 +19,9 @@ object TodoListWorkflow : StatefulWorkflow<Unit, TodoListWorkflow.TodoNetworkSta
     val todoListWorker = TodoListWorker()
 
     override fun initialState(props: Unit, snapshot: Snapshot?): TodoNetworkState {
+        //TODO how to you create the object from this
+       Log.d("TestHello", snapshot?.bytes?.utf8().toString())
+        val result = Class.forName("MyClass")
       return TodoNetworkState.Loading
     }
 
@@ -48,8 +52,8 @@ object TodoListWorkflow : StatefulWorkflow<Unit, TodoListWorkflow.TodoNetworkSta
         }
     }
 
-    override fun snapshotState(state: TodoNetworkState): Snapshot? {
-        return null
+    override fun snapshotState(state: TodoNetworkState): Snapshot {
+        return Snapshot.write { bufferedSink -> bufferedSink.writeUtf8(state.toString()) }
     }
 
     private fun onTodoListGotten(workerState: TodoListWorker.WorkerState) = action {
